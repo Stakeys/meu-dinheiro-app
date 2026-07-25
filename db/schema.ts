@@ -79,3 +79,20 @@ export function migrateDbIfNeeded() {
 
   db.execSync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
+
+// Verificação defensiva: garante que colunas críticas existem de fato na tabela,
+// independente do que o contador de versão diz. Protege contra dispositivos onde
+// user_version e a estrutura real ficaram dessincronizados (ex.: hot reload
+// pulando uma migração).
+export function ensureColumnsExist() {
+  console.log("[schema] BUILD_TAG check-2026-07-25-b");
+  const goalColumns = db.getAllSync<{ name: string }>("PRAGMA table_info(goals)");
+  console.log("[schema] goals columns:", JSON.stringify(goalColumns.map((c) => c.name)));
+  const hasImageUri = goalColumns.some((c) => c.name === "image_uri");
+  console.log("[schema] hasImageUri:", hasImageUri);
+  if (!hasImageUri) {
+    console.log("[schema] adding image_uri column now");
+    db.execSync(`ALTER TABLE goals ADD COLUMN image_uri TEXT;`);
+    console.log("[schema] column added");
+  }
+}

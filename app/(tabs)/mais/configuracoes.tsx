@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { Card } from "../../../components/Card";
 import { FormField } from "../../../components/FormField";
 import { PillSelect } from "../../../components/PillSelect";
@@ -105,6 +105,23 @@ export default function ConfiguracoesScreen() {
       </Card>
 
       <Card>
+        <View style={styles.securityRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>Segurança</Text>
+            <Text style={[styles.sectionSubtitle, { color: theme.colors.textMuted }]}>
+              Pedir o código do aparelho (ou Face ID/Touch ID, quando disponível) para abrir o app.
+            </Text>
+          </View>
+          <Switch
+            value={settings.lock_enabled === "on"}
+            onValueChange={settings.setLockEnabled}
+            trackColor={{ true: theme.colors.accent, false: theme.colors.surfaceAlt }}
+            thumbColor="#FFFFFF"
+          />
+        </View>
+      </Card>
+
+      <Card>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>Dados</Text>
         <Text style={[styles.sectionSubtitle, { color: theme.colors.textMuted }]}>
           Todos os dados ficam salvos apenas neste dispositivo.
@@ -121,6 +138,7 @@ export default function ConfiguracoesScreen() {
 const styles = StyleSheet.create({
   sectionTitle: { fontSize: 15, fontWeight: "700" },
   sectionSubtitle: { fontSize: 12, marginTop: 4 },
+  securityRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   themeRow: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12 },
   swatches: { flexDirection: "row", gap: 4 },
   swatch: { width: 12, height: 28, borderRadius: 4 },

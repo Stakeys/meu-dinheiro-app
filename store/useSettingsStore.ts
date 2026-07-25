@@ -8,6 +8,7 @@ type State = SettingsMap & {
   setUserName: (name: string) => void;
   setCurrency: (currency: string) => void;
   setAvatar: (uri: string) => void;
+  setLockEnabled: (enabled: boolean) => void;
 };
 
 export const useSettingsStore = create<State>((set) => ({
@@ -15,6 +16,7 @@ export const useSettingsStore = create<State>((set) => ({
   currency: "BRL",
   user_name: "Você",
   avatar_uri: "",
+  lock_enabled: "on",
   refresh: () => set(getAllSettings()),
   setTheme: (theme) => {
     setSetting("theme", theme);
@@ -31,5 +33,10 @@ export const useSettingsStore = create<State>((set) => ({
   setAvatar: (avatar_uri) => {
     setSetting("avatar_uri", avatar_uri);
     set({ avatar_uri });
+  },
+  setLockEnabled: (enabled) => {
+    const lock_enabled = enabled ? "on" : "off";
+    setSetting("lock_enabled", lock_enabled);
+    set({ lock_enabled });
   },
 }));

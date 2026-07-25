@@ -61,4 +61,5 @@ export type SettingsMap = {
   currency: string;
   user_name: string;
   avatar_uri: string;
+  lock_enabled: "on" | "off";
 };

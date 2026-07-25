@@ -31,6 +31,12 @@
           "photosPermission": "O app usa suas fotos para ilustrar metas e o seu perfil.",
           "cameraPermission": "O app usa a câmera para tirar uma foto para suas metas ou perfil."
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "O app usa Face ID para proteger o acesso aos seus dados financeiros."
+        }
       ]
     ],
     "experiments": {

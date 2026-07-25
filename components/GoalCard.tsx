@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { formatCurrency, formatPercent } from "../lib/format";
 import { useTheme } from "../theme/useTheme";
 import { Card } from "./Card";
@@ -15,9 +15,10 @@ type Props = {
   currency?: string;
   compact?: boolean;
   imageUri?: string | null;
+  onAddPhoto?: () => void;
 };
 
-export function GoalCard({ name, current, target, icon, color, currency, compact, imageUri }: Props) {
+export function GoalCard({ name, current, target, icon, color, currency, compact, imageUri, onAddPhoto }: Props) {
   const theme = useTheme();
   const progress = target > 0 ? (current / target) * 100 : 0;
 
@@ -45,15 +46,35 @@ export function GoalCard({ name, current, target, icon, color, currency, compact
     );
   }
 
+  const showPlaceholder = !imageUri && Boolean(onAddPhoto);
+
   return (
-    <Card style={styles.card} padding={imageUri ? 0 : 16}>
+    <Card style={styles.card} padding={imageUri ? 0 : showPlaceholder ? 0 : 16}>
       {imageUri ? <Image source={{ uri: imageUri }} style={styles.coverImage} /> : null}
-      <View style={{ padding: imageUri ? 14 : 0 }}>
+      {showPlaceholder ? (
+        <TouchableOpacity
+          onPress={onAddPhoto}
+          style={[
+            styles.placeholder,
+            { backgroundColor: theme.colors.surfaceAlt, borderColor: color },
+          ]}
+        >
+          <Ionicons name="image-outline" size={22} color={color} />
+          <Text style={[styles.placeholderText, { color }]}>Adicionar foto do seu sonho</Text>
+        </TouchableOpacity>
+      ) : null}
+      <View style={{ padding: imageUri || showPlaceholder ? 14 : 0 }}>
         <View style={styles.header}>
-          {imageUri ? <View /> : <IconBadge name={icon} color={color} size={44} />}
+          {imageUri || showPlaceholder ? (
+            <IconBadge name={icon} color={color} size={32} />
+          ) : (
+            <IconBadge name={icon} color={color} size={44} />
+          )}
           <Text style={[styles.percent, { color }]}>{formatPercent(progress)}</Text>
         </View>
-        <Text style={[styles.name, { color: theme.colors.textPrimary, marginTop: imageUri ? 0 : 10 }]}>{name}</Text>
+        <Text style={[styles.name, { color: theme.colors.textPrimary, marginTop: imageUri || showPlaceholder ? 8 : 10 }]}>
+          {name}
+        </Text>
         <View style={{ marginTop: 8 }}>
           <ProgressBar progress={progress} color={color} />
         </View>
@@ -68,6 +89,16 @@ export function GoalCard({ name, current, target, icon, color, currency, compact
 const styles = StyleSheet.create({
   card: { minWidth: 180 },
   coverImage: { width: "100%", height: 130 },
+  placeholder: {
+    width: "100%",
+    height: 90,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    borderWidth: 1,
+    borderStyle: "dashed",
+  },
+  placeholderText: { fontSize: 12, fontWeight: "700" },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   name: { fontSize: 14, fontWeight: "700" },
   percent: { fontSize: 13, fontWeight: "700" },

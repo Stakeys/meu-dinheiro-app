@@ -174,6 +174,7 @@ export default function MetasScreen() {
                 color={goal.color}
                 currency={currency}
                 imageUri={goal.image_uri}
+                onAddPhoto={() => handleChangeGoalPhoto(goal.id)}
               />
             </TouchableOpacity>
             {expanded ? (

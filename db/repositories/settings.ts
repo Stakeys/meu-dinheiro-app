@@ -6,6 +6,7 @@ const DEFAULTS: SettingsMap = {
   currency: "BRL",
   user_name: "Você",
   avatar_uri: "",
+  lock_enabled: "on",
 };
 
 export function getSetting<K extends keyof SettingsMap>(key: K): SettingsMap[K] {
@@ -19,6 +20,7 @@ export function getAllSettings(): SettingsMap {
     currency: getSetting("currency"),
     user_name: getSetting("user_name"),
     avatar_uri: getSetting("avatar_uri"),
+    lock_enabled: getSetting("lock_enabled"),
   };
 }
 

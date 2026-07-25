@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { migrateDbIfNeeded } from "../db/schema";
+import { ensureColumnsExist, migrateDbIfNeeded } from "../db/schema";
 import { seedDemoData as seedDemoDataDb, clearAllData as clearAllDataDb } from "../db/seed";
 import { useAccountsStore } from "./useAccountsStore";
 import { useBudgetsStore } from "./useBudgetsStore";
@@ -24,6 +24,7 @@ export function useAppInit() {
 
   useEffect(() => {
     migrateDbIfNeeded();
+    ensureColumnsExist();
     refreshAll();
     setReady(true);
   }, []);
