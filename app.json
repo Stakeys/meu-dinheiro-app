@@ -3,6 +3,7 @@
     "name": "meu-dinheiro-app",
     "slug": "meu-dinheiro-app",
     "version": "1.0.0",
+    "scheme": "meudinheiro",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,6 +21,20 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O app usa suas fotos para ilustrar metas e o seu perfil.",
+          "cameraPermission": "O app usa a câmera para tirar uma foto para suas metas ou perfil."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

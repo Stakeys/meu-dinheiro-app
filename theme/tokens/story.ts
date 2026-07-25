@@ -1,0 +1,42 @@
+import type { ThemeTokens } from "../types";
+
+export const story: ThemeTokens = {
+  name: "story",
+  label: "Story",
+  dark: false,
+  colors: {
+    background: "#FFF8F0",
+    surface: "#FFFFFF",
+    surfaceAlt: "#FFF1E0",
+    border: "#F0E0CC",
+    textPrimary: "#3A2E22",
+    textSecondary: "#7A6A57",
+    textMuted: "#B0A28C",
+    accent: "#FF7A59",
+    accentAlt: "#FFB000",
+    income: "#4CAF7D",
+    expense: "#FF6B6B",
+    savings: "#FF7A59",
+    warning: "#FFB000",
+    danger: "#E85D5D",
+    success: "#4CAF7D",
+  },
+  heroGradient: ["#FFD6A5", "#FF9F7A"],
+  cardGradient: ["#FFFFFF", "#FFF6EC"],
+  bucketColors: {
+    necessidades: "#FFB000",
+    estilo_vida: "#FF7A59",
+    investimentos: "#4CAF7D",
+    outros: "#B0A28C",
+  },
+  radius: { sm: 8, md: 16, lg: 24, xl: 32, pill: 999 },
+  shadow: {
+    shadowColor: "#C9843F",
+    shadowOpacity: 0.15,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+  },
+  glow: false,
+  headingWeight: "800",
+};

@@ -1,0 +1,42 @@
+import type { ThemeTokens } from "../types";
+
+export const clarity: ThemeTokens = {
+  name: "clarity",
+  label: "Clarity",
+  dark: false,
+  colors: {
+    background: "#F5F6F8",
+    surface: "#FFFFFF",
+    surfaceAlt: "#F0F1F5",
+    border: "#E5E7EB",
+    textPrimary: "#111318",
+    textSecondary: "#5B6272",
+    textMuted: "#9AA1AF",
+    accent: "#4F46E5",
+    accentAlt: "#22C55E",
+    income: "#16A34A",
+    expense: "#EF4444",
+    savings: "#4F46E5",
+    warning: "#F59E0B",
+    danger: "#EF4444",
+    success: "#16A34A",
+  },
+  heroGradient: ["#EEF0FF", "#E4E7FF"],
+  cardGradient: ["#FFFFFF", "#FFFFFF"],
+  bucketColors: {
+    necessidades: "#F59E0B",
+    estilo_vida: "#EC4899",
+    investimentos: "#4F46E5",
+    outros: "#94A3B8",
+  },
+  radius: { sm: 4, md: 10, lg: 16, xl: 24, pill: 999 },
+  shadow: {
+    shadowColor: "#0F172A",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  glow: false,
+  headingWeight: "700",
+};

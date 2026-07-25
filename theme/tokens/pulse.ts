@@ -1,0 +1,42 @@
+import type { ThemeTokens } from "../types";
+
+export const pulse: ThemeTokens = {
+  name: "pulse",
+  label: "Pulse",
+  dark: true,
+  colors: {
+    background: "#0B0B14",
+    surface: "#171225",
+    surfaceAlt: "#1D1830",
+    border: "#2A2440",
+    textPrimary: "#FFFFFF",
+    textSecondary: "#B9B4D6",
+    textMuted: "#6F6A8C",
+    accent: "#A855F7",
+    accentAlt: "#22D3EE",
+    income: "#34D399",
+    expense: "#FB7185",
+    savings: "#A855F7",
+    warning: "#FBBF24",
+    danger: "#F43F5E",
+    success: "#34D399",
+  },
+  heroGradient: ["#7C3AED", "#A855F7", "#EC4899"],
+  cardGradient: ["#1E1B32", "#171225"],
+  bucketColors: {
+    necessidades: "#FBBF24",
+    estilo_vida: "#FB7185",
+    investimentos: "#34D399",
+    outros: "#60A5FA",
+  },
+  radius: { sm: 6, md: 14, lg: 22, xl: 30, pill: 999 },
+  shadow: {
+    shadowColor: "#A855F7",
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 8,
+  },
+  glow: true,
+  headingWeight: "700",
+};
