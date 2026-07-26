@@ -22,7 +22,7 @@ export default function ConfiguracoesScreen() {
   const settings = useSettingsStore();
 
   async function handlePickAvatar() {
-    const uri = await pickImage("Foto de perfil");
+    const uri = await pickImage("Foto de perfil", [1, 1]);
     if (uri) settings.setAvatar(uri);
   }
 

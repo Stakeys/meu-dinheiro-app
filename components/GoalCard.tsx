@@ -50,7 +50,16 @@ export function GoalCard({ name, current, target, icon, color, currency, compact
 
   return (
     <Card style={styles.card} padding={imageUri ? 0 : showPlaceholder ? 0 : 16}>
-      {imageUri ? <Image source={{ uri: imageUri }} style={styles.coverImage} /> : null}
+      {imageUri ? (
+        <TouchableOpacity onPress={onAddPhoto} disabled={!onAddPhoto} activeOpacity={0.85}>
+          <Image source={{ uri: imageUri }} style={styles.coverImage} />
+          {onAddPhoto ? (
+            <View style={[styles.editBadge, { backgroundColor: "rgba(0,0,0,0.55)" }]}>
+              <Ionicons name="camera" size={14} color="#FFFFFF" />
+            </View>
+          ) : null}
+        </TouchableOpacity>
+      ) : null}
       {showPlaceholder ? (
         <TouchableOpacity
           onPress={onAddPhoto}
@@ -89,6 +98,16 @@ export function GoalCard({ name, current, target, icon, color, currency, compact
 const styles = StyleSheet.create({
   card: { minWidth: 180 },
   coverImage: { width: "100%", height: 130 },
+  editBadge: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   placeholder: {
     width: "100%",
     height: 90,

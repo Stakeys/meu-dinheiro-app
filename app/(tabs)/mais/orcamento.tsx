@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { AmountField } from "../../../components/AmountField";
 import { Card } from "../../../components/Card";
 import { IconBadge } from "../../../components/IconBadge";
 import { ProgressBar } from "../../../components/ProgressBar";
 import { PrimaryButton } from "../../../components/PrimaryButton";
 import { ScreenContainer } from "../../../components/ScreenContainer";
 import * as transactionsRepo from "../../../db/repositories/transactions";
-import { formatCurrency } from "../../../lib/format";
+import { formatCurrency, getCurrencySymbol } from "../../../lib/format";
 import { useBudgetsStore } from "../../../store/useBudgetsStore";
 import { useCategoriesStore } from "../../../store/useCategoriesStore";
 import { useSettingsStore } from "../../../store/useSettingsStore";
@@ -27,15 +28,10 @@ export default function OrcamentoScreen() {
     return new Map(rows.map((r) => [r.category_id, r.total]));
   }, [month, transactions]);
 
-  const [drafts, setDrafts] = useState<Record<number, string>>({});
+  const [drafts, setDrafts] = useState<Record<number, number>>({});
 
-  function draftFor(categoryId: number, limitAmount: number) {
-    return drafts[categoryId] ?? (limitAmount > 0 ? String(limitAmount) : "");
-  }
-
-  function handleSave(categoryId: number) {
-    const raw = drafts[categoryId];
-    const value = Number((raw ?? "").replace(",", "."));
+  function handleSave(categoryId: number, limitAmount: number) {
+    const value = drafts[categoryId] ?? limitAmount;
     if (!value || value <= 0) return;
     saveBudget({ category_id: categoryId, month, limit_amount: value });
   }
@@ -73,24 +69,16 @@ export default function OrcamentoScreen() {
             ) : null}
 
             <View style={styles.editRow}>
-              <TextInput
-                keyboardType="decimal-pad"
-                placeholder="Limite mensal"
-                placeholderTextColor={theme.colors.textMuted}
-                value={draftFor(category.id, limit)}
-                onChangeText={(v) => setDrafts((prev) => ({ ...prev, [category.id]: v }))}
-                style={[
-                  styles.input,
-                  {
-                    backgroundColor: theme.colors.surfaceAlt,
-                    color: theme.colors.textPrimary,
-                    borderRadius: theme.radius.md,
-                    borderColor: theme.colors.border,
-                  },
-                ]}
-              />
-              <View style={{ width: 100 }}>
-                <PrimaryButton label="Salvar" onPress={() => handleSave(category.id)} />
+              <View style={{ flex: 1 }}>
+                <AmountField
+                  label="Limite mensal"
+                  initialValue={limit}
+                  onChangeValue={(v) => setDrafts((prev) => ({ ...prev, [category.id]: v }))}
+                  prefix={getCurrencySymbol(currency)}
+                />
+              </View>
+              <View style={{ width: 100, marginTop: 20 }}>
+                <PrimaryButton label="Salvar" onPress={() => handleSave(category.id, limit)} />
               </View>
             </View>
           </Card>
@@ -105,6 +93,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: 12 },
   name: { fontSize: 14, fontWeight: "700" },
   spent: { fontSize: 12, marginTop: 2 },
-  editRow: { flexDirection: "row", gap: 10, marginTop: 12, alignItems: "center" },
-  input: { flex: 1, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, borderWidth: StyleSheet.hairlineWidth },
+  editRow: { flexDirection: "row", gap: 10, marginTop: 12, alignItems: "flex-start" },
 });

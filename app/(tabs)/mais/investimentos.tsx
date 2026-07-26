@@ -2,12 +2,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AmountField } from "../../../components/AmountField";
 import { Card } from "../../../components/Card";
 import { FieldGroup, FormField } from "../../../components/FormField";
 import { PillSelect } from "../../../components/PillSelect";
 import { PrimaryButton } from "../../../components/PrimaryButton";
 import { ScreenContainer } from "../../../components/ScreenContainer";
-import { formatCurrency, formatPercent } from "../../../lib/format";
+import { formatCurrency, formatPercent, getCurrencySymbol } from "../../../lib/format";
 import { useInvestmentsStore } from "../../../store/useInvestmentsStore";
 import { useSettingsStore } from "../../../store/useSettingsStore";
 import { useTheme } from "../../../theme/useTheme";
@@ -34,23 +35,21 @@ export default function InvestimentosScreen() {
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [type, setType] = useState("renda_fixa");
-  const [invested, setInvested] = useState("");
-  const [current, setCurrent] = useState("");
+  const [invested, setInvested] = useState(0);
+  const [current, setCurrent] = useState(0);
 
   function handleCreate() {
-    const investedValue = Number(invested.replace(",", "."));
-    const currentValue = Number((current || invested).replace(",", "."));
-    if (!name.trim() || !investedValue || investedValue <= 0) return;
+    if (!name.trim() || !invested || invested <= 0) return;
     addInvestment({
       name: name.trim(),
       type,
-      invested_amount: investedValue,
-      current_amount: currentValue,
+      invested_amount: invested,
+      current_amount: current || invested,
       date: format(new Date(), "yyyy-MM-dd"),
     });
     setName("");
-    setInvested("");
-    setCurrent("");
+    setInvested(0);
+    setCurrent(0);
     setShowForm(false);
   }
 
@@ -82,8 +81,13 @@ export default function InvestimentosScreen() {
           <FieldGroup>
             <FormField label="Nome" value={name} onChangeText={setName} placeholder="Ex: Tesouro Selic" />
             <PillSelect label="Tipo" value={type} onChange={setType} options={TYPE_OPTIONS} />
-            <FormField label="Valor investido" keyboardType="decimal-pad" value={invested} onChangeText={setInvested} placeholder="0,00" />
-            <FormField label="Valor atual (opcional)" keyboardType="decimal-pad" value={current} onChangeText={setCurrent} placeholder="0,00" />
+            <AmountField label="Valor investido" initialValue={invested} onChangeValue={setInvested} prefix={getCurrencySymbol(currency)} />
+            <AmountField
+              label="Valor atual (opcional)"
+              initialValue={current}
+              onChangeValue={setCurrent}
+              prefix={getCurrencySymbol(currency)}
+            />
           </FieldGroup>
           <View style={{ marginTop: 16 }}>
             <PrimaryButton label="Adicionar" onPress={handleCreate} />

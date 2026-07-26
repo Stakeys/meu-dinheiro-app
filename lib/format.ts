@@ -2,6 +2,14 @@ export function formatCurrency(value: number, currency: string = "BRL"): string 
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency }).format(value);
 }
 
+export function getCurrencySymbol(currency: string = "BRL"): string {
+  // formatToParts não existe no Hermes (motor JS do React Native), então extraímos
+  // o símbolo removendo os dígitos/pontuação do resultado já formatado.
+  const formatted = formatCurrency(0, currency);
+  const symbol = formatted.replace(/[\d.,\s ]/g, "").trim();
+  return symbol || currency;
+}
+
 export function formatPercent(value: number): string {
   return `${Math.round(value)}%`;
 }

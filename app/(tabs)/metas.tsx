@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AmountField } from "../../components/AmountField";
 import { Card } from "../../components/Card";
 import { FieldGroup, FormField } from "../../components/FormField";
 import { GoalCard } from "../../components/GoalCard";
 import { PillSelect } from "../../components/PillSelect";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { ScreenContainer } from "../../components/ScreenContainer";
+import { getCurrencySymbol } from "../../lib/format";
 import { pickImage } from "../../lib/images";
 import { useGoalsStore } from "../../store/useGoalsStore";
 import { useSettingsStore } from "../../store/useSettingsStore";
@@ -44,13 +46,14 @@ export default function MetasScreen() {
 
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
-  const [target, setTarget] = useState("");
+  const [target, setTarget] = useState(0);
   const [iconChoice, setIconChoice] = useState<keyof typeof Ionicons.glyphMap>("flag");
   const [colorChoice, setColorChoice] = useState(colorPresets[0]);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
 
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [contributionDrafts, setContributionDrafts] = useState<Record<number, string>>({});
+  const [contributionDrafts, setContributionDrafts] = useState<Record<number, number>>({});
+  const [contributionResetTick, setContributionResetTick] = useState(0);
 
   async function handlePickPhoto() {
     const uri = await pickImage("Foto da meta");
@@ -63,11 +66,10 @@ export default function MetasScreen() {
   }
 
   function handleCreate() {
-    const value = Number(target.replace(",", "."));
-    if (!name.trim() || !value || value <= 0) return;
+    if (!name.trim() || !target || target <= 0) return;
     addGoal({
       name: name.trim(),
-      target_amount: value,
+      target_amount: target,
       current_amount: 0,
       deadline: null,
       icon: iconChoice,
@@ -75,17 +77,17 @@ export default function MetasScreen() {
       image_uri: photoUri,
     });
     setName("");
-    setTarget("");
+    setTarget(0);
     setPhotoUri(null);
     setShowForm(false);
   }
 
   function handleContribute(goalId: number) {
-    const raw = contributionDrafts[goalId];
-    const value = Number((raw ?? "").replace(",", "."));
+    const value = contributionDrafts[goalId];
     if (!value || value <= 0) return;
     contribute(goalId, value);
-    setContributionDrafts((prev) => ({ ...prev, [goalId]: "" }));
+    setContributionDrafts((prev) => ({ ...prev, [goalId]: 0 }));
+    setContributionResetTick((t) => t + 1);
   }
 
   return (
@@ -104,7 +106,7 @@ export default function MetasScreen() {
         <Card>
           <FieldGroup>
             <FormField label="Nome da meta" value={name} onChangeText={setName} placeholder="Ex: Viagem para o Japão" />
-            <FormField label="Valor alvo" keyboardType="decimal-pad" value={target} onChangeText={setTarget} placeholder="0,00" />
+            <AmountField label="Valor alvo" initialValue={target} onChangeValue={setTarget} prefix={getCurrencySymbol(currency)} />
 
             <View>
               <Text style={{ color: theme.colors.textSecondary, fontSize: 13, fontWeight: "600", marginBottom: 6 }}>
@@ -181,12 +183,12 @@ export default function MetasScreen() {
               <Card style={{ marginTop: 8 }}>
                 <View style={styles.contributeRow}>
                   <View style={{ flex: 1 }}>
-                    <FormField
+                    <AmountField
+                      key={`contrib-${goal.id}-${contributionResetTick}`}
                       label="Adicionar aporte"
-                      keyboardType="decimal-pad"
-                      value={contributionDrafts[goal.id] ?? ""}
-                      onChangeText={(v) => setContributionDrafts((prev) => ({ ...prev, [goal.id]: v }))}
-                      placeholder="0,00"
+                      initialValue={contributionDrafts[goal.id] ?? 0}
+                      onChangeValue={(v) => setContributionDrafts((prev) => ({ ...prev, [goal.id]: v }))}
+                      prefix={getCurrencySymbol(currency)}
                     />
                   </View>
                   <View style={{ width: 110, marginTop: 20 }}>
@@ -194,11 +196,6 @@ export default function MetasScreen() {
                   </View>
                 </View>
                 <View style={{ marginTop: 12, gap: 10 }}>
-                  <PrimaryButton
-                    label={goal.image_uri ? "Trocar foto" : "Adicionar foto"}
-                    variant="outline"
-                    onPress={() => handleChangeGoalPhoto(goal.id)}
-                  />
                   <PrimaryButton
                     label="Excluir meta"
                     variant="outline"
